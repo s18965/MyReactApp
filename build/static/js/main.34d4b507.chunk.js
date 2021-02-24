@@ -1,0 +1,2 @@
+(this.webpackJsonpwimbledon=this.webpackJsonpwimbledon||[]).push([[0],{9:function(e,n,t){"use strict";t.r(n);var r=t(0),c=t.n(r),o=t(3),i=t.n(o),s=t(1);var d=function(){return Object(s.jsx)("h1",{children:"Hello world!"})};i.a.render(Object(s.jsx)(c.a.StrictMode,{children:Object(s.jsx)(d,{})}),document.getElementById("root"))}},[[9,1,2]]]);
+//# sourceMappingURL=main.34d4b507.chunk.js.map
