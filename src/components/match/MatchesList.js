@@ -1,47 +1,61 @@
 import React from 'react'
 import {Link} from "react-router-dom";
 import { getMatchesApiCall} from "../../apiCalls/matchApiCalls";
+import MatchListTable from "./MatchListTable";
 
+class MatchesList extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            error: null,
+            isLoaded: false,
+            matches: []
+        }
+    }
 
-function MatchesList() {
-    const matchList = getMatchesApiCall()
+    fetchPlayerList = () => {
+        getMatchesApiCall()
+            .then(res => res.json())
+            .then(
+                (data) => {
+                    this.setState({
+                        isLoaded: true,
+                        matches: data
+                    });
+                },
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
 
-    return (
-        <main>
-            <h2>List of Matches</h2>
-            <table className="table-list">
-                <thead>
-                <tr>
-                    <th>Player</th>
-                    <th>Rival</th>
-                    <th>Date</th>
-                    <th>Winner</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {matchList.map(match => (
-                    <tr key={match.id}>
-                        <td>{match.idPlayer}</td>
-                        <td>{match.idRival}</td>
-                        <td>{match.date}</td>
-                        <td>{match.idWinner}</td>
-                        <td>
-                            <ul className="list-actions">
-                                <li><Link to={`matches/details/${match.id}`} className="list-actions-button-details">Details</Link></li>
-                                <li><Link to={`matches/edit/${match.id}`} className="list-actions-button-edit">Edit</Link></li>
-                                <li><Link to={`matches/delete/${match.id}`} className="list-actions-button-delete">Delete</Link></li>
-                            </ul>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            <p className="section-buttons">
-                <Link to={`matches/add`} className="button-add">Add new Match</Link>
-            </p>
-        </main>
-    )
-}
+    componentDidMount() {
+        this.fetchPlayerList()
+    }
 
-export default MatchesList
+    render() {
+        const { error, isLoaded, matches } = this.state
+        let content;
+
+        if (error) {
+            content = <p>Error: {error.message}</p>
+        } else if (!isLoaded) {
+            content = <p>Loading matches' details...</p>
+        } else {
+            content = <MatchListTable matchesList={matches} />
+        }
+
+        return (
+            <main>
+                <h2>List of matches</h2>
+                { content}
+                <p className="section-buttons">
+                    <Link to="/matches/add" className="button-add">Add new match</Link>
+                </p>
+            </main >
+        )
+    }
+} export default MatchesList

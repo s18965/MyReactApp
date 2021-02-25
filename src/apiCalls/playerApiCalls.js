@@ -1,10 +1,13 @@
-import { playerList, playerDetailsList } from './playerApiMockData'
+const playersBaseUrl= 'http://localhost:3000/api/players'
 
 export function getPlayersApiCall() {
-    return playerList;
+    const promise = fetch(playersBaseUrl)
+    return promise;
 }
 
 export function getPlayerByIdApiCall(playerId) {
-    const player = playerDetailsList.find(player => player.id === playerId)
-    return player;
+    const url = `${playersBaseUrl}/${playerId}`;
+    const promise = fetch(url);
+    return promise;
 }
+

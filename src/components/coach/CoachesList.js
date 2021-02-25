@@ -1,45 +1,61 @@
 import React from 'react'
 import {Link} from "react-router-dom";
 import { getCoachesApiCall} from "../../apiCalls/coachApiCalls";
+import CoachListTable from "./CoachListTable";
 
+class CoachesList extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            error: null,
+            isLoaded: false,
+            coaches: []
+        }
+    }
 
-function CoachesList() {
-    const coachList = getCoachesApiCall()
+    fetchCoachesList = () => {
+        getCoachesApiCall()
+            .then(res => res.json())
+            .then(
+                (data) => {
+                    this.setState({
+                        isLoaded: true,
+                        coaches: data
+                    });
+                },
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
 
-    return (
-        <main>
-            <h2>List of Coaches</h2>
-            <table className="table-list">
-                <thead>
-                <tr>
-                    <th>First name</th>
-                    <th>Last Name</th>
-                    <th>Country</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {coachList.map(coach => (
-                    <tr key={coach.id}>
-                        <td>{coach.firstName}</td>
-                        <td>{coach.lastName}</td>
-                        <td>{coach.country}</td>
-                        <td>
-                            <ul className="list-actions">
-                                <li><Link to={`coaches/details/${coach.id}`} className="list-actions-button-details">Details</Link></li>
-                                <li><Link to={`coaches/edit/${coach.id}`} className="list-actions-button-edit">Edit</Link></li>
-                                <li><Link to={`coaches/delete/${coach.id}`} className="list-actions-button-delete">Delete</Link></li>
-                            </ul>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-            <p className="section-buttons">
-                <Link to={`coaches/add`} className="button-add">Add new Coach</Link>
-            </p>
-        </main>
-    )
-}
+    componentDidMount() {
+        this.fetchCoachesList()
+    }
 
-export default CoachesList
+    render() {
+        const { error, isLoaded, coaches } = this.state
+        let content;
+
+        if (error) {
+            content = <p>Error: {error.message}</p>
+        } else if (!isLoaded) {
+            content = <p>Loading coaches' details...</p>
+        } else {
+            content = <CoachListTable coachesList={coaches} />
+        }
+
+        return (
+            <main>
+                <h2>List of coaches</h2>
+                { content}
+                <p className="section-buttons">
+                    <Link to="/coaches/add" className="button-add">Add new coach</Link>
+                </p>
+            </main >
+        )
+    }
+} export default CoachesList

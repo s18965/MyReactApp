@@ -1,10 +1,12 @@
-import { coachList, coachDetailsList } from './coachApiMockData'
+const coachesBaseUrl= 'http://localhost:3000/api/coaches'
 
 export function getCoachesApiCall() {
-    return coachList;
+    const promise = fetch(coachesBaseUrl)
+    return promise;
 }
 
 export function getCoachByIdApiCall(coachId) {
-    const coach = coachDetailsList.find(coach => coach.id === coachId)
-    return coach;
+    const url = `${coachesBaseUrl}/${coachId}`;
+    const promise = fetch(url);
+    return promise;
 }

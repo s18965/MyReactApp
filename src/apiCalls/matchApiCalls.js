@@ -1,10 +1,12 @@
-import { matchList, matchDetailsList } from './matchApiMockData'
+const matchesBaseUrl= 'http://localhost:3000/api/matches'
 
 export function getMatchesApiCall() {
-    return matchList;
+    const promise = fetch(matchesBaseUrl)
+    return promise;
 }
 
 export function getMatchByIdApiCall(matchId) {
-    const match = matchDetailsList.find(match => match.id === matchId)
-    return match;
+    const url = `${matchesBaseUrl}/${matchId}`;
+    const promise = fetch(url);
+    return promise;
 }
